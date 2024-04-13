@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  portanic:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - go_mod:/go/pkg/mod
+    environment:
+      - GO_ENV=development
+
+volumes:
+  go_mod:
+
