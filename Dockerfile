@@ -18,6 +18,6 @@ WORKDIR /root/
 
 COPY --from=builder /portanic .
 
-COPY templates /root/templates
+COPY static /root/static
 
 CMD ["./portanic"]
