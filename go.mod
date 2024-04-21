@@ -2,7 +2,10 @@ module github.com/portanic/portanic
 
 go 1.21.7
 
-require github.com/labstack/echo/v4 v4.12.0
+require (
+	github.com/a-h/templ v0.2.663
+	github.com/labstack/echo/v4 v4.12.0
+)
 
 require (
 	github.com/labstack/gommon v0.4.2 // indirect
