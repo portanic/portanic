@@ -13,6 +13,9 @@ func main() {
     homeHandler := handlers.HomeHandler{}
 	app.GET("/", homeHandler.HandleHome)
 
+    catlogHandler := handlers.CatalogHandler{}
+	app.GET("/catalog", catlogHandler.HandleShowCataLog)
+
 	app.Static("/css", "static/css")
 	app.Static("/js", "static/js")
 	app.Static("/vendors", "static/vendors")

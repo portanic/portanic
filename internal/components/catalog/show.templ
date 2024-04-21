@@ -1,0 +1,41 @@
+package Catalog
+
+import "github.com/portanic/portanic/internal/components/layout"
+
+templ Show() {
+    @layout.Base() {
+        <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">System</th>
+            <th scope="col">Owner</th>
+            <th scope="col">Type</th>
+            <th scope="col">Lifecycle</th>
+            <th scope="col">Description</th>
+            <th scope="col">Tags</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <th scope="row">1</th>
+            <td>Example</td>
+            <td>Checkout</td>
+            <td>Larry</td>
+            <td>service</td>
+            <td>lorem ipsum</td>
+            <td>go</td>
+            </tr>
+            <tr>
+            <th scope="row">2</th>
+            <td>Another</td>
+            <td>Base</td>
+            <td>Hans</td>
+            <td>service</td>
+            <td>lorem ipsum</td>
+            <td>python</td>
+            </tr>
+        </tbody>
+        </table>
+    }
+}
