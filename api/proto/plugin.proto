@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option go_package = "api/proto";
+
+package plugin;
+
+service PluginService {
+    rpc GetBlock(BlockRequest) returns (BlockResponse);
+    rpc GetPage(PageRequest) returns (PageResponse);
+    rpc GetData(DataRequest) returns (DataResponse);
+}
+
+message BlockRequest {
+    string identifier = 1;
+    map<string, string> parameters = 2;
+}
+
+message PageRequest {
+    string identifier = 1;
+    map<string, string> parameters = 2;
+}
+
+message DataRequest {
+    string identifier = 1;
+    map<string, string> parameters = 2;
+}
+
+message BlockResponse {
+    bool success = 1;
+    string htmlContent = 2;
+    string message = 3;
+}
+
+message PageResponse {
+    bool success = 1;
+    string htmlContent = 2;
+    string message = 3;
+}
+
+message DataResponse {
+    bool success = 1;
+    string data = 2; // JSON
+    string message = 3;
+}

@@ -16,3 +16,6 @@ logs:
 
 sqlc:
   sqlc generate
+
+rpc:
+    protoc --go_out=. --go-grpc_out=. -I api/proto/ api/proto/plugin.proto
