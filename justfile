@@ -13,3 +13,6 @@ restart:
 
 logs:
     docker-compose logs
+
+sqlc:
+  sqlc generate
