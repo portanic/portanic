@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   portanic:
     build: .
@@ -8,7 +8,8 @@ services:
       - .:/app
       - go_mod:/go/pkg/mod
     environment:
-      - GO_ENV=development
+      GO_ENV: development
+      ZOOKEEPER_HOST: zookeeper
     depends_on:
       db:
         condition: service_healthy
@@ -27,7 +28,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+      - "8081:8080"
+  portanic-example:
+    build:
+      context: .
+      dockerfile: plugins/example/Dockerfile
+    depends_on:
+      - zookeeper
+    environment:
+      ZOOKEEPER_HOST: zookeeper
 
 volumes:
   go_mod:

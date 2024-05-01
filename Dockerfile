@@ -18,6 +18,9 @@ WORKDIR /root/
 
 COPY --from=builder /portanic .
 
+RUN mkdir /usr/share/portanic/
+
 COPY static /root/static
+COPY .plugins /root/.plugins
 
 CMD ["./portanic"]
