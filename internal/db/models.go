@@ -5,17 +5,17 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type DataSource struct {
-	ID   pgtype.UUID
+	ID   uuid.UUID
 	Name pgtype.Text
-	Type interface{}
 }
 
 type MappedDatum struct {
-	ID        pgtype.UUID
+	ID        uuid.UUID
 	MappingID pgtype.UUID
 	Data      []byte
 	CreatedAt pgtype.Timestamp
@@ -28,38 +28,36 @@ type Mapping struct {
 }
 
 type Organization struct {
-	ID        pgtype.UUID
+	ID        uuid.UUID
 	Name      pgtype.Text
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }
 
 type OrganizationsUser struct {
-	OrganizationID pgtype.UUID
-	UserID         pgtype.UUID
-	PRIMARY        interface{}
+	OrganizationID uuid.UUID
+	UserID         uuid.UUID
 }
 
 type OrganizationsUsersRole struct {
-	OrganizationID pgtype.UUID
-	UserID         pgtype.UUID
-	RoleID         pgtype.UUID
-	PRIMARY        interface{}
+	OrganizationID uuid.UUID
+	UserID         uuid.UUID
+	RoleID         uuid.UUID
 }
 
 type Role struct {
-	ID          pgtype.UUID
+	ID          uuid.UUID
 	Name        pgtype.Text
 	Description pgtype.Text
 }
 
 type ServiceCatalog struct {
-	ID       pgtype.UUID
+	ID       uuid.UUID
 	Template pgtype.UUID
 }
 
 type ServiceTemplate struct {
-	ID        pgtype.UUID
+	ID        uuid.UUID
 	Name      string
 	Fields    []byte
 	CreatedBy string
@@ -68,7 +66,7 @@ type ServiceTemplate struct {
 }
 
 type User struct {
-	ID        pgtype.UUID
+	ID        uuid.UUID
 	Name      pgtype.Text
 	Email     string
 	CreatedAt pgtype.Timestamp

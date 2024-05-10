@@ -8,24 +8,57 @@ package db
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
-const getUser = `-- name: GetUser :one
-SELECT id, name, email, created_at, updated_at, last_login FROM users
-WHERE id = $1 LIMIT 1
+const createTemplate = `-- name: CreateTemplate :exec
+INSERT INTO service_templates (id, name, fields, created_by, created_at, updated_at) VALUES($1, $2, $3, $4, now(), null)
 `
 
-func (q *Queries) GetUser(ctx context.Context, id pgtype.UUID) (User, error) {
-	row := q.db.QueryRow(ctx, getUser, id)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Email,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.LastLogin,
+type CreateTemplateParams struct {
+	ID        uuid.UUID
+	Name      string
+	Fields    []byte
+	CreatedBy string
+}
+
+func (q *Queries) CreateTemplate(ctx context.Context, arg CreateTemplateParams) error {
+	_, err := q.db.Exec(ctx, createTemplate,
+		arg.ID,
+		arg.Name,
+		arg.Fields,
+		arg.CreatedBy,
 	)
-	return i, err
+	return err
+}
+
+const getAllTemplates = `-- name: GetAllTemplates :many
+SELECT id, name, fields, created_by, created_at, updated_at FROM service_templates ORDER BY created_at
+`
+
+func (q *Queries) GetAllTemplates(ctx context.Context) ([]ServiceTemplate, error) {
+	rows, err := q.db.Query(ctx, getAllTemplates)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ServiceTemplate
+	for rows.Next() {
+		var i ServiceTemplate
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Fields,
+			&i.CreatedBy,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

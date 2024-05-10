@@ -19,3 +19,10 @@ sqlc:
 
 rpc:
     protoc --go_out=. --go-grpc_out=. -I api/proto/ api/proto/plugin.proto
+
+run:
+    docker-compose down
+    nix run github:a-h/templ generate
+    docker-compose build
+    docker-compose up
+
