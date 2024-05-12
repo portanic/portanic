@@ -66,6 +66,15 @@ CREATE TABLE "mappings" (
   data_source uuid
 );
 
+ALTER TABLE "service_catalog" ADD FOREIGN KEY ("template") REFERENCES "service_templates" ("id");
+ALTER TABLE "mappings" ADD FOREIGN KEY ("template") REFERENCES "service_templates" ("id");
+ALTER TABLE "mappings" ADD FOREIGN KEY ("data_source") REFERENCES "data_source" ("id");
+ALTER TABLE "organizations_users_roles" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
+ALTER TABLE "organizations_users_roles" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "organizations_users_roles" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
+ALTER TABLE "organizations_users" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
+ALTER TABLE "organizations_users" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+
 -- +goose Down
 DROP TABLE "organizations";
 DROP TABLE "organizations_users";
@@ -78,20 +87,3 @@ DROP TABLE "data_source";
 DROP TABLE "mappings";
 DROP TABLE "mapped_data";
 
-ALTER TABLE "service_catalog" ADD FOREIGN KEY ("template") REFERENCES "service_templates" ("id");
-
-ALTER TABLE "mapped_data" ADD FOREIGN KEY ("mapping_id") REFERENCES "mappings" ("id");
-
-ALTER TABLE "mappings" ADD FOREIGN KEY ("template") REFERENCES "service_templates" ("id");
-
-ALTER TABLE "mappings" ADD FOREIGN KEY ("data_source") REFERENCES "data_source" ("id");
-
-ALTER TABLE "organizations_users_roles" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
-
-ALTER TABLE "organizations_users_roles" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "organizations_users_roles" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
-
-ALTER TABLE "organizations_users" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
-
-ALTER TABLE "organizations_users" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");

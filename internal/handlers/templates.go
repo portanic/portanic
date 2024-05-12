@@ -21,7 +21,7 @@ type TemplatesHandler struct {
 func (h TemplatesHandler) HandleShowTemplates(c echo.Context) error {
 	allTemplates, err := h.DB.GetAllTemplates(context.Background())
 	if err != nil {
-		panic("failed to retrieve")
+		return render(c, Templates.Show([]Templates.Template{}))
 	}
 	templateList := []Templates.Template{}
 

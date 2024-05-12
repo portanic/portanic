@@ -22,7 +22,7 @@ func (h CatalogHandler) HandleShowCataLog(c echo.Context) error {
 
 	template, err := h.DB.GetTemplateByID(ctx, catalog.Template)
 	if err != nil {
-		panic("catalog shiat")
+		return render(c, Catalog.Show(map[string]string{}))
 	}
 
 	fields, err := ParseFields(template.Fields)
@@ -46,7 +46,7 @@ func ParseFields(jsonData []byte) (map[string]string, error) {
 func (h CatalogHandler) HandleNewCatalog(c echo.Context) error {
 	allTemplates, err := h.DB.GetAllTemplates(context.Background())
 	if err != nil {
-		panic("failed to retrieve")
+		return render(c, Catalog.New([]Catalog.Template{}))
 	}
 	templateList := []Catalog.Template{}
 
