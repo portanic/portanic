@@ -1,14 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/labstack/echo/v4"
-	//"github.com/portanic/portanic/internal/db"
 	"github.com/go-zookeeper/zk"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/labstack/echo/v4"
+	"github.com/portanic/portanic/internal/db"
 	"github.com/portanic/portanic/internal/handlers"
-	//"github.com/portanic/portanic/plugins"
+
+	pgxUUID "github.com/vgarvardt/pgx-google-uuid/v5"
 )
 
 func connectZK() *zk.Conn {
@@ -45,25 +49,39 @@ func main() {
 	// Discover services
 	discoverServices(zkConn, "/services")
 
-	//config := db.Config{
-	//Host:     "db",
-	//Port:     5432,
-	//User:     "portanic",
-	//Password: "portanic",
-	//DBName:   "portanic",
-	//}
+	connString := "postgres://portanic:portanic@db:5432/portanic"
+	pgxConfig, err := pgxpool.ParseConfig(connString)
+	if err != nil {
+		panic(err)
+	}
 
-	//database, err := db.New(config)
-	//if err != nil {
-	//log.Fatalf("Failed to connect to database: %v", err)
-	//}
-	//defer database.Close()
+	pgxConfig.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
+		pgxUUID.Register(conn.TypeMap())
+		return nil
+	}
+
+	pgxConnPool, err := pgxpool.NewWithConfig(context.TODO(), pgxConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	defer pgxConnPool.Close()
+
+	queries := db.New(pgxConnPool)
 
 	homeHandler := handlers.HomeHandler{}
 	app.GET("/", homeHandler.HandleHome)
 
 	catlogHandler := handlers.CatalogHandler{}
 	app.GET("/catalog", catlogHandler.HandleShowCataLog)
+
+	templatesHandler := handlers.TemplatesHandler{DB: queries}
+	app.GET("/templates", templatesHandler.HandleShowTemplates)
+
+	// Add route for creating a new template
+	app.GET("/templates/new", templatesHandler.HandleNewTemplate)
+
+	app.POST("/templates", templatesHandler.HandleCreateTemplate)
 
 	app.Static("/css", "static/css")
 	app.Static("/js", "static/js")

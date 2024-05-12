@@ -1,0 +1,53 @@
+package Templates
+
+import "github.com/portanic/portanic/internal/components/layout"
+
+templ New() {
+@layout.Base() {
+<h1>Create New Template</h1>
+<form action="/templates" method="post" id="templateForm">
+  <div>
+    <label for="name">Template Name:</label>
+    <input type="text" id="name" name="name" required />
+    <br />
+  </div>
+  <div id="dynamicFields">
+    <!-- Dynamic fields will be added here -->
+  </div>
+  <button type="button" onclick="addCustomField()">Add Custom Field</button>
+  <br />
+  <br />
+  <button type="submit">
+    Submit
+  </button>
+</form>
+<script>
+  // Function to add a new custom field
+  function addCustomField() {
+    const container = document.getElementById('dynamicFields');
+    const index = container.children.length + 1;  // Calculate the next index
+    const fieldHTML = `
+        <div class="custom-field">
+            <label for="fieldName${index}">Field Name:</label>
+            <input type="text" id="fieldName${index}" name="fieldName${index}" required />
+            <label for="fieldType${index}">Field Type:</label>
+            <select id="fieldType${index}" name="fieldType${index}" required>
+                <option value="string">String</option>
+                <option value="number">Number</option>
+                <option value="date">Date</option>
+                <option value="boolean">Boolean</option>
+            </select>
+            <button type="button" onclick="removeField(this)">Remove</button>
+            <br />
+        </div>
+    `;
+    container.innerHTML += fieldHTML; // Append new field HTML
+  }
+
+  // Function to remove a custom field
+  function removeField(button) {
+    button.parentNode.remove(); // Remove the field's div container
+  }
+</script>
+}
+}

@@ -1,0 +1,35 @@
+package Templates
+
+import "github.com/portanic/portanic/internal/components/layout"
+
+type Template struct {
+Id string
+Name string
+CreatedAt string
+}
+
+templ Show(templates []Template) {
+@layout.Base() {
+<h1>Templates</h1>
+<a href="/templates/new"
+  style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+  New Template
+</a>
+<table border="1" cellspacing="0" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>CreatedAt</th>
+    </tr>
+  </thead>
+  <tbody>
+    for _, template := range templates {
+    <tr>
+      <td>{ template.Name }</td>
+      <td>{ template.CreatedAt }</td>
+    </tr>
+    }
+  </tbody>
+</table>
+}
+}
