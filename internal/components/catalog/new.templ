@@ -1,0 +1,23 @@
+package Catalog
+
+import "github.com/portanic/portanic/internal/components/layout"
+
+type Template struct {
+	Id   string
+	Name string
+}
+
+templ New(templates []Template) {
+	@layout.Base() {
+		<h1>Create New Catalog</h1>
+		<form id="templateForm" hx-post="/catalog">
+			<label for="templateSelect">Select Template:</label>
+			<select id="template" name="template">
+				for _, template := range templates {
+					<option value={ template.Id }>{ template.Name }</option>
+				}
+			</select>
+			<button type="submit">Submit</button>
+		</form>
+	}
+}

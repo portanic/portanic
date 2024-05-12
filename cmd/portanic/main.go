@@ -72,15 +72,15 @@ func main() {
 	homeHandler := handlers.HomeHandler{}
 	app.GET("/", homeHandler.HandleHome)
 
-	catlogHandler := handlers.CatalogHandler{}
+	catlogHandler := handlers.CatalogHandler{DB: queries}
 	app.GET("/catalog", catlogHandler.HandleShowCataLog)
+	app.GET("/catalog/new", catlogHandler.HandleNewCatalog)
+	app.POST("/catalog", catlogHandler.HandleCreateCatalog)
 
 	templatesHandler := handlers.TemplatesHandler{DB: queries}
 	app.GET("/templates", templatesHandler.HandleShowTemplates)
-
-	// Add route for creating a new template
+	app.GET("/templates/get", templatesHandler.HandleGetTemplateFields)
 	app.GET("/templates/new", templatesHandler.HandleNewTemplate)
-
 	app.POST("/templates", templatesHandler.HandleCreateTemplate)
 
 	app.Static("/css", "static/css")
