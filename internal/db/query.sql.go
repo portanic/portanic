@@ -11,6 +11,20 @@ import (
 	"github.com/google/uuid"
 )
 
+const createCatalog = `-- name: CreateCatalog :exec
+INSERT INTO service_catalog (id, template) VALUES($1, $2)
+`
+
+type CreateCatalogParams struct {
+	ID       uuid.UUID
+	Template uuid.UUID
+}
+
+func (q *Queries) CreateCatalog(ctx context.Context, arg CreateCatalogParams) error {
+	_, err := q.db.Exec(ctx, createCatalog, arg.ID, arg.Template)
+	return err
+}
+
 const createTemplate = `-- name: CreateTemplate :exec
 INSERT INTO service_templates (id, name, fields, created_by, created_at, updated_at) VALUES($1, $2, $3, $4, now(), null)
 `
@@ -61,4 +75,33 @@ func (q *Queries) GetAllTemplates(ctx context.Context) ([]ServiceTemplate, error
 		return nil, err
 	}
 	return items, nil
+}
+
+const getCatalog = `-- name: GetCatalog :one
+SELECT id, template FROM service_catalog LIMIT 1
+`
+
+func (q *Queries) GetCatalog(ctx context.Context) (ServiceCatalog, error) {
+	row := q.db.QueryRow(ctx, getCatalog)
+	var i ServiceCatalog
+	err := row.Scan(&i.ID, &i.Template)
+	return i, err
+}
+
+const getTemplateByID = `-- name: GetTemplateByID :one
+SELECT id, name, fields, created_by, created_at, updated_at FROM service_templates WHERE id = $1
+`
+
+func (q *Queries) GetTemplateByID(ctx context.Context, id uuid.UUID) (ServiceTemplate, error) {
+	row := q.db.QueryRow(ctx, getTemplateByID, id)
+	var i ServiceTemplate
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Fields,
+		&i.CreatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }

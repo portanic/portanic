@@ -16,15 +16,15 @@ type DataSource struct {
 
 type MappedDatum struct {
 	ID        uuid.UUID
-	MappingID pgtype.UUID
+	MappingID uuid.UUID
 	Data      []byte
 	CreatedAt pgtype.Timestamp
 }
 
 type Mapping struct {
-	ID         pgtype.UUID
-	Template   pgtype.UUID
-	DataSource pgtype.UUID
+	ID         uuid.UUID
+	Template   uuid.UUID
+	DataSource uuid.UUID
 }
 
 type Organization struct {
@@ -53,7 +53,7 @@ type Role struct {
 
 type ServiceCatalog struct {
 	ID       uuid.UUID
-	Template pgtype.UUID
+	Template uuid.UUID
 }
 
 type ServiceTemplate struct {

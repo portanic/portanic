@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -78,4 +79,36 @@ func (h TemplatesHandler) HandleCreateTemplate(c echo.Context) error {
 	h.DB.CreateTemplate(context.Background(), args)
 
 	return c.String(http.StatusOK, "Template created successfully")
+}
+
+func (h TemplatesHandler) HandleGetTemplateFields(c echo.Context) error {
+	fmt.Println("Handling get templates")
+	templateID := c.QueryParam("tid")
+	templateUUID, err := uuid.Parse(templateID)
+	if err != nil {
+		html := "<div>"
+		html += "</div>"
+		return c.HTML(http.StatusNotFound, html)
+	}
+
+	// Fetch fields based on templateID
+	template, err := h.DB.GetTemplateByID(context.Background(), templateUUID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error fetching template fields")
+	}
+
+	var typeMap map[string]string
+	err = json.Unmarshal(template.Fields, &typeMap)
+	if err != nil {
+		log.Fatalf("Error unmarshalling JSON: %v\n", err)
+	}
+
+	// Generate HTML for fields
+	html := "<form id='dynamicForm' hx-post='/catalog' hx-target='#formResponse'>"
+	for key, value := range typeMap {
+		html += fmt.Sprintf("<div><label>%s:</label><input type='text' name='%s' value=''></div>", key, value)
+	}
+	html += "<button type='submit'>Submit</button>"
+	html += "</form>"
+	return c.HTML(http.StatusOK, html)
 }
