@@ -76,14 +76,14 @@ ALTER TABLE "organizations_users" ADD FOREIGN KEY ("organization_id") REFERENCES
 ALTER TABLE "organizations_users" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
 -- +goose Down
-DROP TABLE "organizations";
-DROP TABLE "organizations_users";
-DROP TABLE "users";
-DROP TABLE "roles";
-DROP TABLE "organizations_users_roles";
-DROP TABLE "service_catalog";
-DROP TABLE "service_templates";
-DROP TABLE "data_source";
-DROP TABLE "mappings";
-DROP TABLE "mapped_data";
+DROP TABLE "mapped_data" CASCADE;
+DROP TABLE "mappings" CASCADE;
+DROP TABLE "data_source" CASCADE;
+DROP TABLE "service_templates" CASCADE;
+DROP TABLE "service_catalog" CASCADE;
+DROP TABLE "organizations_users_roles" CASCADE;
+DROP TABLE "users" CASCADE;
+DROP TABLE "roles" CASCADE;
+DROP TABLE "organizations_users" CASCADE;
+DROP TABLE "organizations" CASCADE;
 
