@@ -28,19 +28,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  zookeeper:
-    image: zookeeper
-    ports:
-      - "2181:2181"
-      - "8081:8080"
-  portanic-example:
-    build:
-      context: .
-      dockerfile: plugins/example/Dockerfile
-    depends_on:
-      - zookeeper
-    environment:
-      ZOOKEEPER_HOST: zookeeper
+  #zookeeper:
+  #image: zookeeper
+  #ports:
+  #- "2181:2181"
+#- "8081:8080"
 
 volumes:
   go_mod:
