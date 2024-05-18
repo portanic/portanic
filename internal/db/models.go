@@ -56,6 +56,14 @@ type ServiceCatalog struct {
 	Template uuid.UUID
 }
 
+type ServiceEntry struct {
+	ID        uuid.UUID
+	CatalogID uuid.UUID
+	Data      []byte
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+
 type ServiceTemplate struct {
 	ID        uuid.UUID
 	Name      string

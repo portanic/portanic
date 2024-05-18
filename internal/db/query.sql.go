@@ -25,6 +25,21 @@ func (q *Queries) CreateCatalog(ctx context.Context, arg CreateCatalogParams) er
 	return err
 }
 
+const createEntry = `-- name: CreateEntry :exec
+INSERT INTO service_entry (id, catalog_id, data, created_at, updated_at) VALUES ($1, $2, $3, now(), null)
+`
+
+type CreateEntryParams struct {
+	ID        uuid.UUID
+	CatalogID uuid.UUID
+	Data      []byte
+}
+
+func (q *Queries) CreateEntry(ctx context.Context, arg CreateEntryParams) error {
+	_, err := q.db.Exec(ctx, createEntry, arg.ID, arg.CatalogID, arg.Data)
+	return err
+}
+
 const createTemplate = `-- name: CreateTemplate :exec
 INSERT INTO service_templates (id, name, fields, created_by, created_at, updated_at) VALUES($1, $2, $3, $4, now(), null)
 `
@@ -44,6 +59,36 @@ func (q *Queries) CreateTemplate(ctx context.Context, arg CreateTemplateParams) 
 		arg.CreatedBy,
 	)
 	return err
+}
+
+const getAllEntries = `-- name: GetAllEntries :many
+SELECT id, catalog_id, data, created_at, updated_at FROM service_entry ORDER BY created_at
+`
+
+func (q *Queries) GetAllEntries(ctx context.Context) ([]ServiceEntry, error) {
+	rows, err := q.db.Query(ctx, getAllEntries)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ServiceEntry
+	for rows.Next() {
+		var i ServiceEntry
+		if err := rows.Scan(
+			&i.ID,
+			&i.CatalogID,
+			&i.Data,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getAllTemplates = `-- name: GetAllTemplates :many

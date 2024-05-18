@@ -50,6 +50,10 @@ func main() {
 	app.GET("/templates/new", templatesHandler.HandleNewTemplate)
 	app.POST("/templates", templatesHandler.HandleCreateTemplate)
 
+	entryHandler := handlers.EntryHandler{DB: queries}
+	app.GET("/entry/new", entryHandler.HandleNewEntry)
+	app.POST("/entry", entryHandler.HandleCreateEntry)
+
 	app.Static("/css", "static/css")
 	app.Static("/js", "static/js")
 	app.Static("/vendors", "static/vendors")

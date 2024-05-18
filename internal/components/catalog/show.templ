@@ -2,23 +2,38 @@ package Catalog
 
 import "github.com/portanic/portanic/internal/components/layout"
 
-templ Show(fields map[string]string) {
-	@layout.Base() {
-		<h1>Service Catalog</h1>
-		<a
-			href="/catalog/new"
-			style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;"
-		>
-			New Catalog
-		</a>
-		<table style="width:100%; border-collapse: collapse; border: 1px solid #ddd;">
-			<thead>
-				<tr>
-					for name, _ := range fields {
-						<th>{ name }</th>
-					}
-				</tr>
-			</thead>
-		</table>
-	}
+type Entry struct {
+Data map[string]string
+}
+
+templ Show(fields map[string]string, entries []Entry) {
+@layout.Base() {
+<h1>Service Catalog</h1>
+<a href="/catalog/new"
+  style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+  New Catalog
+</a>
+<a href="/entry/new"
+  style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+  Add Entry
+</a>
+<table style="width:100%; border-collapse: collapse; border: 1px solid #ddd;">
+  <thead>
+    <tr>
+      for name, _ := range fields {
+      <th>{ name }</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    for _, entry := range entries {
+    <tr>
+      for _, value := range entry.Data {
+      <td>{ value }</td>
+      }
+    </tr>
+    }
+  </tbody>
+</table>
+}
 }
