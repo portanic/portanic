@@ -22,7 +22,7 @@ func (h CatalogHandler) HandleShowCataLog(c echo.Context) error {
 
 	template, err := h.DB.GetTemplateByID(ctx, catalog.Template)
 	if err != nil {
-		return render(c, Catalog.Show(map[string]string{}))
+		return render(c, Catalog.Show(map[string]string{}, nil))
 	}
 
 	fields, err := ParseFields(template.Fields)
@@ -30,7 +30,26 @@ func (h CatalogHandler) HandleShowCataLog(c echo.Context) error {
 		panic("Failed to parse fields")
 	}
 
-	return render(c, Catalog.Show(fields))
+	entries, err := h.DB.GetAllEntries(ctx)
+	if err != nil {
+		panic("Failed to get entries")
+	}
+
+	catalogEntries := []Catalog.Entry{}
+	for _, entry := range entries {
+		var data map[string]string
+		fmt.Println(string(entry.Data))
+		err = json.Unmarshal(entry.Data, &data)
+		if err != nil {
+			panic(err)
+		}
+		newEntry := Catalog.Entry{
+			Data: data,
+		}
+		catalogEntries = append(catalogEntries, newEntry)
+	}
+
+	return render(c, Catalog.Show(fields, catalogEntries))
 }
 
 // Parse dynamic JSON data into a map

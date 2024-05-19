@@ -1,0 +1,17 @@
+package Entry
+
+import "github.com/portanic/portanic/internal/components/layout"
+
+templ New(templates map[string]string) {
+@layout.Base() {
+<h1>Create New Entry</h1>
+<form id="templateForm" hx-post="/entry">
+  for key, _ := range templates {
+  <label for="fieldName${index}">{ key }:</label>
+  <input type="text" id={ key } name={ key } required />
+  <br />
+  }
+  <button type="submit">Submit</button>
+</form>
+}
+}
