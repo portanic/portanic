@@ -3,7 +3,7 @@ module github.com/portanic/portanic
 go 1.21.7
 
 require (
-	github.com/a-h/templ v0.2.663
+	github.com/a-h/templ v0.2.707
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/labstack/echo/v4 v4.12.0
