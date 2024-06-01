@@ -22,7 +22,7 @@ rpc:
 
 run:
     docker compose down
-    nix run github:a-h/templ generate
+    templ generate
     docker compose build
     docker compose up
 
