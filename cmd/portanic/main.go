@@ -54,6 +54,9 @@ func main() {
 	app.GET("/entry/new", entryHandler.HandleNewEntry)
 	app.POST("/entry", entryHandler.HandleCreateEntry)
 
+	integrationsHandler := handlers.IntegrationsHandler{}
+	app.GET("/integrations", integrationsHandler.HandleShowIntegrations)
+
 	app.Static("/css", "static/css")
 	app.Static("/js", "static/js")
 	app.Static("/vendors", "static/vendors")

@@ -1,0 +1,41 @@
+package Integrations
+
+import "github.com/portanic/portanic/internal/components/layout"
+
+type Plugin struct {
+Name string
+Description string
+Icon string
+}
+
+templ Show(plugins []Plugin) {
+@layout.Base() {
+<style>
+  .plugin-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+
+  .plugin-item {
+    flex: 1 1 calc(33.333% - 20px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    text-align: center;
+  }
+</style>
+<div class="plugin-container">
+  for _, plugin := range plugins {
+  <div class="plugin-item">
+    <img src="{ plugin.Icon }" alt="{ plugin.Name } Icon" width="50" height="50"></img>
+    <h2>{ plugin.Name }</h2>
+    <p>{ plugin.Description }</p>
+    <button hx-post="/api/install" hx-vals='{"name": "{ plugin.Name }"}'>Install</button>
+  </div>
+  }
+</div>
+}
+}
